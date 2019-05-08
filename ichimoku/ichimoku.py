@@ -1,5 +1,5 @@
 # Main script for ichimoku cloud
-from ichimoku.functions import make_lines, make_spans, extend_df, chart
+from ichimoku.functions import make_lines, make_spans, extend_df, chart, find_intersections
 import pandas as pd
 %matplotlib inline
 
@@ -18,4 +18,6 @@ df['price'] = df['close'].shift(1)
 make_lines(df, tenkan=tenkan_period, kijun=kijun_period)
 make_spans(df, displacement=displacement, senkou_b_period=senkou_b_period)
 
-chart(df[1500:])
+df = df[1500:].reset_index(drop=True)
+intersections = find_intersections(df)
+chart(df, intersections)

@@ -30,8 +30,24 @@ def make_spans(df, displacement, senkou_b_period):
     df[['senkou_a', 'senkou_b']] = df[['senkou_a', 'senkou_b']].shift(displacement)
 
 
+def find_intersections(df):
+    cloud = df['senkou_a'] > df['senkou_b']
+    current_val = cloud[0]
+    intersections = []
+    for i in range(1, len(cloud)):
+        if cloud[i] is not current_val:
+            try:
+                if cloud[i + 12] is not current_val:
+                    current_val = cloud[i]
+                    intersections.append(i)
+            except:
+                pass
+
+    return intersections
+
+
 # Code to make chart
-def chart(df):
+def chart(df, intersections):
     price = df['price']
     tenkan = df['tenkan']
     kijun = df['kijun']
@@ -45,6 +61,7 @@ def chart(df):
     plt.plot(x, tenkan, color='blue')
     plt.plot(x, kijun, color='maroon')
     plt.plot(x, price, color='black', linewidth=1)
+    [plt.axvline(x=x[i]) for i in intersections]
 
     ax.set(xlabel='Date', ylabel='BTC price ($)', title='2019 BTC/USD price (Bitmex)')
     plt.rc('axes', labelsize=20)
