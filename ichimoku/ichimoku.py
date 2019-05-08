@@ -1,45 +1,60 @@
 # Main script for ichimoku cloud
-from bots.ichimoku.functions import make_lines, make_spans
+from ichimoku.functions import make_lines, make_spans, extend_df
 import pandas as pd
-from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
-from pandas.plotting import register_matplotlib_converters
+import matplotlib.dates as mdates
 %matplotlib inline
-register_matplotlib_converters()
 
+pd.plotting.register_matplotlib_converters()
 
 tenkan_period = 20
 kijun_period = 60
 senkou_b_period = 120
 displacement = 30
 
-df = pd.read_csv('data/historical_candles.csv')
-df['date'] = [datetime.strptime(i, '%Y-%m-%d %H:%M:%S') for i in df['date']]
-last_date = df['date'].at[len(df)-1]
+df = pd.read_csv('data/btc_hourly_candle_2019.csv')
 
-dfEmpty = pd.DataFrame(
-    {'date': [last_date + timedelta(hours=i+1) for i in range(displacement)]}
-)
-
-df = df.append(dfEmpty, ignore_index=True, sort=False)
+extend_df(df, displacement)
+df['price'] = df['close'].shift(1)
 
 make_lines(df, tenkan=tenkan_period, kijun=kijun_period)
 make_spans(df, displacement=displacement, senkou_b_period=senkou_b_period)
 
-df2 = df[8500:]
-
 # Span A > Span B == green cloud
 # Span A < Span B == red cloud
-tenkan = df2['tenkan']
-kijun = df2['kijun']
-a = df2['senkou_a']
-b = df2['senkou_b']
-x = df2['date']
+df = df[1500:]
+price = df['price']
+tenkan = df['tenkan']
+kijun = df['kijun']
+senkou_a = df['senkou_a']
+senkou_b = df['senkou_b']
+x = df['date']
 
-fig = plt.plot(x, a, x, b)
-plt.fill_between(x, a, b, where=a >= b, facecolor='green', interpolate=True)
-plt.fill_between(x, a, b, where=a <= b, facecolor='red', interpolate=True)
+fig, ax = plt.subplots(figsize=(20, 20))
+plt.plot(x, senkou_a, color='green', linewidth=0.5)
+plt.plot(x, senkou_b, color='red', linewidth=0.5)
+plt.plot(x, tenkan, color='blue')
+plt.plot(x, kijun, color='maroon')
+plt.plot(x, price, color='black', linewidth=1)
 
-plt.plot(x, tenkan, color='yellow')
-plt.plot(x, kijun, color='blue')
+ax.set(xlabel='Date', ylabel='BTC price ($)', title='2019 BTC/USD price (Bitmex)')
+plt.rc('axes', labelsize=20)
+plt.rc('font', size=16)
+ax.xaxis.set_major_locator(mdates.WeekdayLocator())
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
+plt.xticks(rotation=45)
+plt.legend()
+plt.fill_between(
+    x, senkou_a, senkou_b,
+    where=senkou_a >= senkou_b,
+    facecolor='limegreen',
+    interpolate=True
+)
+plt.fill_between(
+    x, senkou_a, senkou_b,
+    where=senkou_a <= senkou_b,
+    facecolor='salmon',
+    interpolate=True
+)
+
 plt.show()

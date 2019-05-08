@@ -1,3 +1,13 @@
+from datetime import datetime, timedelta
+
+# Function to extend table by the displacement
+def extend_df(df, displacement):
+    df['date'] = [datetime.strptime(hr, '%Y-%m-%d %H:%M:%S') for hr in df['date']]
+    last_date = df['date'].at[len(df)-1]
+    dates = [last_date + timedelta(hours=i+1) for i in range(displacement)]
+    df = df.append({'date': dates}, ignore_index=True, sort=False)
+
+
 # Tenkan (conversion line) = (highest high + highest low)/2 for the past 9 periods
 # Kijun (base line) = (highest high + lowest low)/2 for the past 26 periods
 def make_lines(df, **kwargs):
