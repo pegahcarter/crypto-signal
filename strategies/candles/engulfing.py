@@ -1,14 +1,21 @@
 import pandas as pd
 import numpy as np
 
-period = 1
+window = 1
+param = {
+    'columns_to_keep': ['date', 'open', 'close'],
+    'functions_to_apply': [
+        'maxmin', 'color_candle'
+    ]
+}
 
-df = pd.read_csv('data/btc_hourly_candle_2019.csv')
+def engulfing():
+    # TODO: import class
+    df = Load(window=window, param)
+    # To be continued....
 
-# True == green candle
-df['green'] = df['close'] > df['open']
-df['max'] = map(max, df[['open', 'close']].values)
-df['min'] = map(min, df[['open', 'close']].values)
+
+    
 
 candle1 = df[period:]
 candle2 = df.shift(period)[period:]
