@@ -1,5 +1,5 @@
 import pandas as pd
-import strategies.candles.engulfing
+import strategies.candles.engulfing as engulfing
 
 filename = 'data/btc_hourly_candle_2019.csv'
 

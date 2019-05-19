@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 window = 1
 param = {
     'columns_to_keep': ['date', 'open', 'close'],
@@ -9,13 +10,9 @@ param = {
     ]
 }
 
-def engulfing():
-    # TODO: import class
-    df = Load(window=window, param)
-    # To be continued....
+def engulfing(df0, df1):
 
 
-    
 
 candle1 = df[period:]
 candle2 = df.shift(period)[period:]
@@ -31,8 +28,7 @@ df['> previous'] = abs(candle1['open'] - candle1['close']) < abs(candle2['open']
 engulf_upper = candle1['max'] <= candle2['max']
 engulf_lower = candle1['min'] >= candle2['min']
 df['engulfing'] = engulf_upper & engulf_lower
+# Only use criteria where candle 2 size is > 2x
 
-
-# df = df[['date', 'switch color', '> previous', 'engulfing']]
 conditions = df['switch color'] & df['> previous'] & df['engulfing']
 engulfings = conditions.where(conditions == True).dropna()

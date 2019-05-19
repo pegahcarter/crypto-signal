@@ -1,19 +1,15 @@
 
 
 class Load:
-    filename = 'data/btc_hourly_candle_2019.csv'
     # NOTE: we want to apply functions first, then shift
-    def __init__(self, window=None **kwargs):
+    def __init__(self, filename, **kwargs):
         self.window = window
-        self.df = pd.read_csv(self.filename)
-        for func, param in kwargs.items():
-            getattr(self, func)(param)
+        self.df = pd.read_csv(filename)
+        self.data = {}
 
-    def shift(self, window):
-        for i in range(1, window+1):
-            # TODO: is this right
-            setattr(self, 'df' + str(i)) = df.shift(i)
-            self.df[new_column] = df[column].shift(i)
+    def add_columns(self):
+        self.green_candle()
+        self.body_maxmin()
 
     # True == green candle
     def green_candle(self):
@@ -23,3 +19,13 @@ class Load:
         body = df[['open', 'close']].values
         self.df['max'] = map(max, body)
         self.df['min'] = map(min, body)
+
+    def extend_date(self, displacement):
+        self.df['date'] = [datetime.strptime(hr, '%Y-%m-%d %H:%M:%S') for hr in df['date']]
+        last_date = self.df['date'].at[len(df)-1]
+        dates = [last_date + timedelta(hours=i+1) for i in range(displacement)]
+        self.df = self.df.append({'date': dates}, ignore_index=True, sort=False)
+
+    def shift(self, window):
+        for i in range(0, window+1):
+            self.data['df' + str(i)] = self.df.shift(i)[window:]
