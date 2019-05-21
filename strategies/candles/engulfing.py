@@ -9,7 +9,7 @@ param = {
 
 def engulfing(df0, df1):
     # Compare candles to only take occurences of the next candle being the opposite color
-    switch_color = df1['green'] != df0['green']
+    switch_color = df1['green_candle'] != df0['green_candle']
 
     # candle is larger than previous candle
     gt_previous = abs(df0['open'] - df0['close']) < abs(df1['open'] - df1['close'])
