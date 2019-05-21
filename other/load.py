@@ -6,8 +6,9 @@ class Load:
         self.window = window
         self.df = pd.read_csv(filename)
         self.data = {}
+        self._add_columns()
 
-    def add_columns(self):
+    def _add_columns(self):
         self.green_candle()
         self.body_maxmin()
 
@@ -19,12 +20,6 @@ class Load:
         body = df[['open', 'close']].values
         self.df['max'] = map(max, body)
         self.df['min'] = map(min, body)
-
-    def extend_date(self, displacement):
-        self.df['date'] = [datetime.strptime(hr, '%Y-%m-%d %H:%M:%S') for hr in df['date']]
-        last_date = self.df['date'].at[len(df)-1]
-        dates = [last_date + timedelta(hours=i+1) for i in range(displacement)]
-        self.df = self.df.append({'date': dates}, ignore_index=True, sort=False)
 
     def shift(self, window):
         for i in range(0, window+1):
