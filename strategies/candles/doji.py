@@ -1,20 +1,30 @@
 import pandas as pd
 
-# NOTE: does not require shifted candles
-df = pd.read_csv('data/btc_hourly_candle_2019.csv')
+'''
+To-do
+- Calculate % logic for how many results should fit candle/candle body
+- What additional conditions are we looking for to utilize doji?
+- Backtest for optimal doji (after we include conditional logic)
+'''
 
-df.head()
+def doji(df):
 
-candle_vol = (df['high'] - df['low']) / df['low']
-candle_body_vol = abs(df['open'] - df['close']) / df['close']
+    candle_vol = (df['high'] - df['low']) / df['low']
+    candle_body_vol = abs(df['open'] - df['close']) / df['close']
 
-candle_std = candle_vol.std()
-candle_body_std = candle_body_vol.std()
+    candle_std = candle_vol.std()
+    candle_body_std = candle_body_vol.std()
 
-# Let's say candle body is < 1/4 sdevs and entire candle > 1.5 sdev
-large_candle = candle_vol >= candle_std * 1.5
-small_candle_body = candle_body_vol < candle_body_std * 0.25
+    # 951 results
+    large_candle = candle_vol >= candle_std * .75
+    # len(candle_vol.where(candle_vol > candle_std * .75).dropna())
 
-results = large_candle & small_candle_body
-# 22 results when body < 1/4 and candle > 1.5 (standard deviations)
-len(results.where(results == True).dropna())
+    # 489 results
+    small_candle_body = candle_body_vol < candle_body_std * 0.1
+    # len(candle_body_vol.where(candle_body_vol < candle_body_std * 0.1).dropna())
+
+    # Combining the two conditions (39 results)
+    results = large_candle & small_candle_body
+    # len(results.where(results == True).dropna())
+
+    return results

@@ -1,6 +1,4 @@
 import pandas as pd
-import numpy as np
-
 
 param = {
     'columns_to_keep': ['date', 'open', 'close'],
@@ -20,4 +18,5 @@ def engulfing(df0, df1):
     engulfed = engulf_upper & engulf_lower
 
     # TODO: Only use criteria where candle 2 size is > 2x
-    return switch_color & gt_previous & engulfed
+    results = switch_color & gt_previous & engulfed
+    return results
