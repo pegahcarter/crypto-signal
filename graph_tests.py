@@ -9,5 +9,4 @@ candles = go.Candlestick(x = df['date'], open=df['open'], high=df['high'], low=d
 
 data = [candles]
 
-
 iplot(data)

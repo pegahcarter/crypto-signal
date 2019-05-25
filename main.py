@@ -7,9 +7,9 @@ filename = 'data/btc_hourly_candle_2019.csv'
 
 def main():
     df = Load(filename, window=1)
-    df.shift()
-    df.df['engulfing'] = engulfing(df.data['df0'], df.data['df1'])
-    df.df['doji'] = doji(df.df)
+    # df.shift()
+    df.data['engulfing'] = engulfing(df.data)
+    df.data['doji'] = doji(df.data)
 
 if __name__ == "__main__":
     main()
