@@ -4,33 +4,29 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 %matplotlib inline
+pd.plotting.register_matplotlib_converters()
 
-def ichimoku():
 
-    pd.plotting.register_matplotlib_converters()
+tenkan_period = 20
+kijun_period = 60
+senkou_b_period = 120
+displacement = 30
 
-    tenkan_period = 20
-    kijun_period = 60
-    senkou_b_period = 120
-    displacement = 30
 
-    df = pd.read_csv('data/btc_hourly_candle_2019.csv')
+def ichimoku(df):
 
-    extend_df(df, displacement)
+    extend_dates(df, displacement)
     df['price'] = df['close'].shift(1)
 
     make_lines(df, tenkan=tenkan_period, kijun=kijun_period)
     make_spans(df, displacement=displacement, senkou_b_period=senkou_b_period)
 
-    df = df[1500:].reset_index(drop=True)
-    intersections = find_intersections(df)
-    chart(df, intersections)
-
-
+    cloud_intersections = find_intersections(df['senkou_a'], df['senkou_b'])
+    chart(df, cloud_intersections)
 
 
 # Function to extend table by the displacement
-def extend_df(df, displacement):
+def extend_dates(df, displacement):
     df['date'] = [datetime.strptime(hr, '%Y-%m-%d %H:%M:%S') for hr in df['date']]
     last_date = df['date'].at[len(df)-1]
     dates = [last_date + timedelta(hours=i+1) for i in range(displacement)]
@@ -57,37 +53,29 @@ def make_spans(df, displacement, senkou_b_period):
     df[['senkou_a', 'senkou_b']] = df[['senkou_a', 'senkou_b']].shift(displacement)
 
 
-def find_intersections(df):
-    cloud = df['senkou_a'] > df['senkou_b']
-    current_val = cloud[0]
+# Determines intersection points between two lines
+# TODO: add confirmation period
+def find_intersections(line1, line2):
     intersections = []
-    for i in range(1, len(cloud)):
-        if cloud[i] is not current_val:
-            try:
-                if cloud[i + 12] is not current_val:
-                    current_val = cloud[i]
-                    intersections.append(i)
-            except:
-                pass
+    l1_gt_l2 = line1 > line2
+    current_val = line1_gt_line2[0]
+    for next_val in l1_gt_l2[1:]:
+        intersections.append(current_val != next_val)
+        current_val = next_val
 
     return intersections
 
 
-# Code to make chart
+# Creates chart with i-cloud
 def chart(df, intersections):
-    price = df['price']
-    tenkan = df['tenkan']
-    kijun = df['kijun']
-    senkou_a = df['senkou_a']
-    senkou_b = df['senkou_b']
     x = df['date']
 
     fig, ax = plt.subplots(figsize=(20, 20))
-    plt.plot(x, senkou_a, color='green', linewidth=0.5)
-    plt.plot(x, senkou_b, color='red', linewidth=0.5)
-    plt.plot(x, tenkan, color='blue')
-    plt.plot(x, kijun, color='maroon')
-    plt.plot(x, price, color='black', linewidth=1)
+    plt.plot(x, df['senkou_a'], color='green', linewidth=0.5)
+    plt.plot(x, df['senkou_b'], color='red', linewidth=0.5)
+    plt.plot(x, df['tenkan'], color='blue')
+    plt.plot(x, df['kijun'], color='maroon')
+    plt.plot(x, df['price'], color='black', linewidth=1)
     [plt.axvline(x=x[i]) for i in intersections]
 
     ax.set(xlabel='Date', ylabel='BTC price ($)', title='2019 BTC/USD price (Bitmex)')
@@ -101,14 +89,14 @@ def chart(df, intersections):
     # Span A > Span B == green cloud
     # Span A < Span B == red cloud
     plt.fill_between(
-        x, senkou_a, senkou_b,
-        where=senkou_a >= senkou_b,
+        x, df['senkou_a'], df['senkou_b'],
+        where=df['senkou_a'] >= df['senkou_b'],
         facecolor='limegreen',
         interpolate=True
     )
     plt.fill_between(
-        x, senkou_a, senkou_b,
-        where=senkou_a <= senkou_b,
+        x, df['senkou_a'], df['senkou_b'],
+        where=df['senkou_a'] <= df['senkou_b'],
         facecolor='salmon',
         interpolate=True
     )
