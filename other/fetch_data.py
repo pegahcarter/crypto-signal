@@ -17,4 +17,15 @@ df = pd.DataFrame(data=data, columns=['date', 'open', 'high', 'low', 'close', 'v
 
 df['date'] /= 1000
 df['date'] = [datetime.fromtimestamp(i) for i in df['date']]
-df.to_csv('data/btc_hourly_candle_2019.csv', index=False)
+df.to_csv('data/1h.csv')
+
+four_h = pd.DataFrame(columns=['date', 'open', 'high', 'low', 'close', 'volume'])
+for i in range(0,len(df), 4):
+    four_h = four_h.append(df.iloc[i])
+
+six_h = pd.DataFrame(columns=['date', 'open', 'high', 'low', 'close', 'volume'])
+for i in range(0,len(df), 6):
+    six_h = six_h.append(df.iloc[i])
+
+four_h.to_csv('data/4h.csv')
+six_h.to_csv('data/6h.csv')

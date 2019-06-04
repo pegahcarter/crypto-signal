@@ -17,10 +17,8 @@ df['doji'] = df['body'] < 0.1 * (df['wick'] + df['tail'])
 # TODO: better param?
 df['hammer'] = df['tail'] > 3 * df['body']
 df['inverted_hammer'] = df['wick'] > 3 * df['body']
-
 # -----------------------------------------------------------------------
 # Functions
-
 def engulfed(smaller, larger):
     return (smaller['body'] < larger['body'] \
     & smaller['body_min'] > larger['body_min'] \
@@ -31,18 +29,14 @@ def gap(up_down, first, second):
         return first['body_max'] < second['body_min']
     else:  # up_down == 'down'
         return first['body_min'] > second['body_max']
-
 # -----------------------------------------------------------------------
-
 bull = pd.DataFrame()
 bear = pd.DataFrame()
 
 c_1 = df[2:]
 c_2 = df.shift(1)[2:]
 c_3 = df.shift(2)[2:]
-
 # -----------------------------------------------------------------------
-# Bear & Bull candles
 
 bull['engulfed'] = engulfed(c_1, c_2) & c_1['-'] & c_2['+']
 bear['engulfed'] = engulfed(c_1, c_2) & c_1['+'] & c_2['-']
