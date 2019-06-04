@@ -10,3 +10,14 @@ candles = go.Candlestick(x = df['date'], open=df['open'], high=df['high'], low=d
 data = [candles]
 
 iplot(data)
+
+
+# ------------------------------------------------------------------------------
+# Charting i-cloud
+import pandas as pd
+from strategies.ichimoku import ichimoku
+
+df = pd.read_csv('data/4h.csv')
+df = df[df.columns[1:]]
+
+ichimoku(df)
