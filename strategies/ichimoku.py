@@ -3,7 +3,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-%matplotlib inline
 pd.plotting.register_matplotlib_converters()
 
 
@@ -58,7 +57,7 @@ def make_spans(df, displacement, senkou_b_period):
 def find_intersections(line1, line2):
     intersections = []
     l1_gt_l2 = line1 > line2
-    current_val = line1_gt_line2[0]
+    current_val = l1_gt_l2[0]
     for next_val in l1_gt_l2[1:]:
         intersections.append(current_val != next_val)
         current_val = next_val
@@ -76,7 +75,7 @@ def chart(df, intersections):
     plt.plot(x, df['tenkan'], color='blue')
     plt.plot(x, df['kijun'], color='maroon')
     plt.plot(x, df['price'], color='black', linewidth=1)
-    [plt.axvline(x=x[i]) for i in intersections]
+    # [plt.axvline(x=x[i]) for i in intersections]
 
     ax.set(xlabel='Date', ylabel='BTC price ($)', title='2019 BTC/USD price (Bitmex)')
     plt.rc('axes', labelsize=20)
