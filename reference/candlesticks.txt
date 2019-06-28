@@ -1,0 +1,57 @@
+------------------------------------
+-- Defining candle-stick patterns --
+------------------------------------
+
+1 Candles
+
+- doji
+  - open/close almost identical
+  - gravestone - large wick, small tail
+  - long-legged - similar wick and tail
+  - dragonfly - small wick, large tail
+
+- spinning top
+  - Larger body than doji
+  - Large wick and tail
+
+------------------------------------
+
+2 Candles
+
+- Harami
+  - Candle 1 is +/-, large body
+  - Candle 2 is -/+ (opposite candle 1), open/close inside candle 1 body
+  - Works best if bull/bear harami occurs in a similar bull/bear trend (add weighting?)
+
+- Harami cross
+  - Candle 1 is +/1, large body
+  - Candle 2 is doji
+
+-----------------------------------
+
+3+ Candles
+
+- Rising/Falling three
+  - Candles 1 & 5 are +/-
+  - Candles 2, 3, & 4 are -/+ (opposite)
+  - Large 1 & 5 bodies
+  - Small 2, 3, 4 bodies
+  - 2, 3, and 4 bodies stay in range of day 1 price range
+  - (+) Candle 5 close > candle 1 close, (-) candle 5 close < candle 1 close
+
+- Inside up
+  - Market is in downtrend/move lower
+  - candle 1 is -, large body
+  - candle 2 is +, small body, open/close inside candle 1 body
+  - candle 3 is +, close > candle 2 close
+
+- Inside down
+  - Market is in uptrend/move higher
+  - candle 1 is +, large body
+  - candle 2 is -, small body, open/close inside candle 1 body
+  - candle 3 is -, close < candle 2 close
+
+- Tri-star
+  - Candle 1, 2, and 3 are all doji
+  - usually leads to a reversal in trend
+  - Near a support/resistance level increases reversal probability

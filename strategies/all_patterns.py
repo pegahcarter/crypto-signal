@@ -51,6 +51,3 @@ bear['kicker'] = gap('down', c_1, c_2) & c_1['+'] & c_2['-']
 # Bear-specfic candles
 bear['hanging_man'] = c_1['+'] & c_2['-'] & c_1['gap_up'] & c_1['hammer']
 bear['shooting_star'] = c_1['+'] & c_2['-'] & c_1['gap_up'] & c_2['inverted_hammer']
-
-
-# Bull-specfic candles
